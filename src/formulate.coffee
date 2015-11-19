@@ -286,6 +286,7 @@ generateCProgram = (comp, target) ->
 
     #{body}
 
+    return 0;
   }
 
   """
