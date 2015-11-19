@@ -350,7 +350,7 @@ tests = () ->
     it 'should generate C code with same solution', (done) ->
       generateCProgram c, 'W_b'
       { exec } = require 'child_process'
-      exec 'gcc -o prog -lm prog.c && ./prog', (err, stdout) ->
+      exec 'gcc -o prog prog.c -lm && ./prog', (err, stdout) ->
         chai.expect(err).to.not.exist
         chai.expect(stdout).to.equal "W_b=12.00\n"
         done()
