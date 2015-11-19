@@ -1,1 +1,4 @@
 node_modules
+prog
+prog.c
+src/generated.js
