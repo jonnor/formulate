@@ -21,6 +21,7 @@ describe 'c=a+b,a=1,b=2', ->
 describe 'guv proportional scaling', ->
   f = functions
   c = formulate.Computation.create('proportional')
+    .description('Deadline-based proportional scaling of compute workers')
     .var('N').label('jobs in queue')
     .var('p').label('processing time')
     .var('ta').label('target time')
@@ -28,6 +29,7 @@ describe 'guv proportional scaling', ->
     .var('T_a').label('available time').function(['ta', 'p'], f['-'])
     .var('W').label('required workers').function(['T_w', 'T_a'], f['/'])
     .parent()
+
   it 'should solve for W', ->
     c.open().set('N', 100).set('p', 10).set('ta', 52).close()
     chai.expect(Math.ceil(c.data['W'])).to.equal 24
@@ -61,3 +63,20 @@ describe 'guv proportional scaling', ->
       chai.expect(err, "#{err?.message}: #{stderr}\n#{stdout}").to.not.exist
       chai.expect(stdout).to.equal "W_b=12.00\n"
       done()
+
+  describe 'textual description', () ->
+    description = null
+    it 'has name of computation', () ->
+      description = c.toString() # hack
+      console.log description
+      chai.expect(description).to.include('proportional')
+    it 'has brief description of computation', ->
+      chai.expect(description).to.include 'Deadline-based proportional scaling of compute workers'
+    it 'has description of variables', ->
+      chai.expect(description).to.include('T_w: waiting time')
+    it 'has formula of functions', ->
+      chai.expect(description).to.include('((N*p)/(ta-p))')
+
+  describe 'exporting as plain function', ->
+    it 'computes correct result'
+    it 'can describe itself'

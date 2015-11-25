@@ -1,6 +1,5 @@
-# ./node_modules/.bin/mocha --compilers=coffee:coffee-script/register grids.coffee
 
-# A Grid is akin to a spreadsheet
+# A formulate computation is akin to a spreadsheet
 # - contains of a set of cells containing data
 # - cells data have a particular type
 # - cell value can be calculated as an expression of other cells
@@ -14,16 +13,14 @@
 # - cell changes are grouped into transactions. TODO: or make resolution fully lazy?
 #
 # Goals: introspectable handling of equations in 'real application'
-# - can be visualized and manipulated in UI, both statically and live
+# - explains well how the problem is modelled
+# - can quickly&easily be visualized and manipulated in UI, both statically and live
 # - usable by non-tech audiences with live data coming from live production systems
 #
-# TODO: move into a proper library
 # TODO: use in http://github.com/the-grid/guv ?
-# TODO: add function for 'rendering' variable descriptions
-# TODO: add support for units
 # TODO: add some sort of selectors, including multi-value/ranges
-# TODO: add NoFlo integration
-# TODO: add a simple DSL?
+# TODO: evalluate MathJS, including function DSL and units support
+# TODO: allow integration into NoFlo, as component/subgraph
 # TODO: add some UI prototypes
 # XXX: optional integration with WebWorker?
 debug = () ->
@@ -195,6 +192,21 @@ class Computation
 
   mathML: (target, symbolic = true) ->
     return renderAsciiMathML this, target, symbolic
+
+  toString: () ->
+    str = "#{@id}: #{@properties.description}\n\n"
+    indent = '\t'
+    for name, v of @variables
+      func = @functions[name]
+      str += "#{indent}#{name}"
+      if func
+        str += ": #{v.properties.label}" if v.properties.label != name
+        formula = innerAsciiMathML this, name, true
+        str += " = #{formula}"
+      else
+        str += ": #{v.properties.label}" if v.properties.label != name
+      str += '\n'
+    return str
 
 Computation.create = (id) ->
   return new Computation id
