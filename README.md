@@ -1,10 +1,10 @@
 # formulate
 
-Experiment in how one can formulate executable mathematical models,
-which are *introspectable*: that can describe themselves, can be queried and explored.
+Experiment in how one can formulate executable mathematical models which are *introspectable*:
+that can describe themselves, can be queried and explored.
 
-Written in CoffeeScript, for use from JavaScript on node.js and browser
-- but in a way that models can also be used in embedded software/devices (in C).
+Written in CoffeeScript, for use from JavaScript on node.js and browser,
+but in a way that models can also be used in embedded software/devices (in C).
 
 ## Status
 
