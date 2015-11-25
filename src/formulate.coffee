@@ -149,7 +149,7 @@ class Computation
 
   # functions
   function: (target, inputs, func) ->
-    func = new Function func, this if typeof func == 'function'
+    func = new Function(func, this) if typeof func == 'function'
     func.ctx = this
     func.inputs = inputs # hack
     @_implicitTransaction "#{target}=f(#{inputs.join(',')})", () =>
@@ -193,6 +193,9 @@ class Computation
 
     @_resolve() if @dirty.length
 
+  mathML: (target, symbolic = true) ->
+    return renderAsciiMathML this, target, symbolic
+
 Computation.create = (id) ->
   return new Computation id
 
@@ -225,41 +228,7 @@ renderAsciiMathML = (comp, target, symbolic=true) ->
   out += " = #{data}" if not symbolic
   return out
 
-
-generateFunctions = () ->
-  fs = require 'fs'
-  path = require 'path'
-
-  code = ""
-  for op in ['+', '-', '*', '/']
-    f = "exports['#{op}'] = function(v, a, b) { return a#{op}b; };\n"
-    code += f
-
-  filepath = path.join __dirname, 'generated.js'
-  fs.writeFileSync filepath, code, 'utf-8'
-
-  p = path.join __dirname, 'generated.js'
-  functions = {}
-  exported = require p
-  for op, f of exported
-    func = new Function f
-    func.label "#a#{op}#b"
-    functions[op] = func
-  return functions
-
-functions = generateFunctions()
-
-addDefaultFunctions = (f) ->
-  min = (a, b) -> if a < b then a else b
-  max = (a, b) -> if a > b then a else b
-  bound = (v, lower, upper) -> return min(max(v, lower), upper)
-  f['min'] = Function.create(min).label('min(#a,#b)')
-  f['max'] = Function.create(max).label('max(#a,#b)')
-  f['bound'] = Function.create(bound).label('bound(#a,#b,#c)')
-  f['ceil'] = Function.create(Math.ceil).label('ceil(#a)')
-
-addDefaultFunctions functions
-
+# TODO: move out to separate file
 # TODO: allow to generate a function, with free variables as arguments
 generateCProgram = (comp, target) ->
   fs = require 'fs'
@@ -293,67 +262,8 @@ generateCProgram = (comp, target) ->
   fs.writeFileSync('prog.c', prog, 'utf-8')
   return prog
 
-tests = () ->
-  chai = require 'chai'
 
-  describe 'c=a+b,a=1,b=2', ->
-    da = null
-    it 'c should be 3', ->
-      da = Computation.create('simple')
-          .description 'Make things as simple as they can be, but no simpler'
-          .var('a').set 1
-          .var('b').set 2
-          .var('c').function ['a', 'b'], (v, a, b) -> return a + b
-          .parent()
-      chai.expect(da.data['c']).to.eql 3
-
-    it 'a=2 should make c=4', ->
-      da.transaction 'initial', () ->
-        @set 'a', 2
-      chai.expect(da.data['c']).to.eql 4
-
-  describe 'guv proportional scaling', ->
-    f = functions
-    c = Computation.create('proportional')
-      .var('N').label('jobs in queue')
-      .var('p').label('processing time')
-      .var('ta').label('target time')
-      .var('T_w').label('waiting time').function(['N', 'p'], f['*'])
-      .var('T_a').label('available time').function(['ta', 'p'], f['-'])
-      .var('W').label('required workers').function(['T_w', 'T_a'], f['/'])
-      .parent()
-    it 'should solve for W', ->
-      c.open().set('N', 100).set('p', 10).set('ta', 52).close()
-      chai.expect(Math.ceil(c.data['W'])).to.equal 24
-    it 'render T_w as ascii MathML symbolically', ->
-      render = renderAsciiMathML c, 'T_w'
-      chai.expect(render).to.equal 'T_w = (N*p)'
-
-    it 'should solve for W_b', ->
-      c.var('min').label('worker minimum').set 2
-      c.var('max').label('worker maximum').set 12
-      c.var('W_r').function(['W'], f['ceil'])
-      c.var('W_b').label('workers').function(['W_r', 'max', 'min'], f['bound'])
-      chai.expect(c.data['W_b']).to.equal 12
-
-    it 'render W as ascii MathML symbolically', ->
-      render = renderAsciiMathML c, 'W'
-      chai.expect(render).to.equal 'W = ((N*p)/(ta-p))'
-
-    it 'render W_b as ascii MathML symbolically', ->
-      render = renderAsciiMathML c, 'W_b'
-      chai.expect(render).to.equal 'W_b = (bound((ceil(((N*p)/(ta-p)))),max,min))'
-
-    it 'render solved W_b as ascii MathML', ->
-      render = renderAsciiMathML c, 'W_b', false
-      chai.expect(render).to.equal 'W_b = (bound((ceil(((100*10)/(52-10)))),12,2)) = 12'
-
-    it 'should generate C code with same solution', (done) ->
-      generateCProgram c, 'W_b'
-      { exec } = require 'child_process'
-      exec 'gcc -o prog prog.c -lm -Wall && ./prog', (err, stdout, stderr) ->
-        chai.expect(err, "#{err?.message}: #{stderr}\n#{stdout}").to.not.exist
-        chai.expect(stdout).to.equal "W_b=12.00\n"
-        done()
-
-tests()
+exports.Function = Function
+exports.Variable = Variable
+exports.Computation = Computation
+exports.generateCProgram = generateCProgram

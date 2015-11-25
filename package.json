@@ -7,6 +7,6 @@
     "mocha": "^2.2.5"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers=coffee:coffee-script/register src/*.coffee"
+    "test": "./node_modules/.bin/mocha --compilers=coffee:coffee-script/register spec/*.coffee"
   }
 }
