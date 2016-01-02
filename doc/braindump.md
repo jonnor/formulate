@@ -38,3 +38,8 @@ And that it is set up such that metrics can be looked up automatically to fill i
 
 A model with visualizations could also serve as excellent, interactive, documentation
 - and possibly also as a dashboard.
+
+# Related
+
+* Guesstimate, spreadsheet with probability diatributions
+https://medium.com/guesstimate-blog/introducing-guesstimate-a-spreadsheet-for-things-that-aren-t-certain-2fa54aa9340#.x7jxtil9thttps://news.ycombinator.com/item?id=10816563
