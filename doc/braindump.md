@@ -13,6 +13,13 @@
 >  Notice how the model’s assumptions are clearly visible, and can even be adjusted by the reader.
 http://worrydream.com/ClimateChange/#media
 
+> This is one secret of the mass accessibility of spreadsheets:
+> they don't require abstraction—you build a concrete working example, then tweak it.
+> This differs from other programming environments — even the simplest scripting languages —
+> which require you to build abstractions first and only later instantiate them.
+> That is a huge cognitive hurdle
+https://news.ycombinator.com/item?id=10830686
+
 ## Relation to metrics
 
 It is often useful to have a model of a (software) system.
