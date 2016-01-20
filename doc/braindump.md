@@ -48,5 +48,10 @@ A model with visualizations could also serve as excellent, interactive, document
 
 # Related
 
-* Guesstimate, spreadsheet with probability diatributions
+* Guesstimate, spreadsheet with probability distributions.
 https://medium.com/guesstimate-blog/introducing-guesstimate-a-spreadsheet-for-things-that-aren-t-certain-2fa54aa9340#.x7jxtil9thttps://news.ycombinator.com/item?id=10816563
+* Pancakes and Spacetime by Jake Sandlund, spreadsheet-like computation environments. [video 1](https://vimeo.com/143547307).
+Nice how one can 'go up' one level from a set of cells forming a computation to reuse it. Interesting ideas on encouraging copy&paste.
+
+
+
