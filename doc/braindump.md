@@ -53,5 +53,34 @@ https://medium.com/guesstimate-blog/introducing-guesstimate-a-spreadsheet-for-th
 * Pancakes and Spacetime by Jake Sandlund, spreadsheet-like computation environments. [video 1](https://vimeo.com/143547307).
 Nice how one can 'go up' one level from a set of cells forming a computation to reuse it. Interesting ideas on encouraging copy&paste.
 
+# User interface
 
+Two aspects:
+
+* Creating a user interface around a model implemented with formulate
+* User interface for creating/exploring/manipulating formulate models/programs
+
+## Display interface
+
+* Should be able to generate/build simple UIs for a model, aided by the declared introspection data.
+* Data shoud be live, and UI allow to able to manipulate the inputs of model.
+* One desirable style is interactive calculators, with inputs and output widgets.
+* Another is having interactive prose with embedded data variables.
+* Ease of integrating/connecting custom graphs, widgets and other interactive visualizations.
+* Reflect data as being manipulated, ideally allow two-way interaction.
+* Allow to transition into the programming interface (and back)
+
+Possible relationship to Flowtrace idea of
+[data visualization plugins](https://github.com/flowbased/flowtrace/blob/master/ui/notes.md#visualization-plugins).
+
+## Programming interface
+
+* Fundamental items: Variables, Functions.
+* Should/can we use RegExps for matching variables by name?
+* Should be possible to share a formulate model, via URL.
+And depend on it, for use in other models and embedded in software. NPM integration?
+* Should be easy to get data into, including live. Do we need a DataProvider type plugin?
+* How would large sets of data be stored/represented?
+Structured data in key-value store, with keynames encoding structure (Redis style)?
+* Programming interface should manipulate some datastructure, which also embedded formulate can use
 
