@@ -83,4 +83,7 @@ And depend on it, for use in other models and embedded in software. NPM integrat
 * How would large sets of data be stored/represented?
 Structured data in key-value store, with keynames encoding structure (Redis style)?
 * Programming interface should manipulate some datastructure, which also embedded formulate can use
+* Should have tests as first-level citizen. Possibly in programming-by-example style
+* Should be possible to easily create derivative 'scenarios', changing some inputs of the model,
+and then compare results to other scenarios.
 
